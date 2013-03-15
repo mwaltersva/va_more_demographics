@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html>
+<!-- start right frame -->
+<head>
+    <title>Student Detailed Demographics</title>
+    ~[wc:UI_js_includes]
+    ~[wc:commonscripts]
+    <link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+    <link rel="stylesheet" type="text/css" href="/images/boxing.css">
+		
+    <script language="JavaScript" src="/admin/javascript/student_copyAddress.js"></script>
+	<script language="JavaScript" src="/admin/JavaScript/phoneNumber.js"></script>
+		<style>
+			.clickable { cursor:pointer; }
+		</style>
+
+<script type="text/javascript">
+    var selectedAdapter = "~[displaypref:mappingadapter.selected]";
+    var mapKey = "~[x:selectedvalidationmappingadapterkey]";
+
+		function onload() {
+			prepPage();
+			// If they don't select any of the visible options for ethnicity, choose "-1" for them ...
+			var defaultEthnicity = document.getElementById("defaultEthnicity");
+			if ( defaultEthnicity ) {
+				defaultEthnicity.value = "-1";
+			}
+		}
+  
+
+</script>
+
+~[x:renderboundaryobject]
+
+<!--<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;~[x:selectedmappingadapterkey]" type="text/javascript"></script>-->
+
+~[get_js_texts:psx.js.admin_validation.validationCommon.]
+<script language="JavaScript" src="/admin/validation/validationCommon.js"></script>
+</head>
+<body onload="onload()">
+<form action="/admin/changesrecorded.white.html" method="POST" onSubmit="return validateInput()">
+~[wc:admin_header_frame_css]
+
+<!-- breadcrumb start -->
+<a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.generaldemographics.start_page]</a> &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.generaldemographics.student_selection]</a> &gt;~[text:psx.html.admin_students.generaldemographics.general_demographics1]
+<!-- breadcrumb end -->
+~[wc:admin_navigation_frame_css]
+
+~[wc:title_student_begin_css]Student Detailed Demographics~[wc:title_student_end_css]
+<div class="button-row">
+<button type="button" class="collapseAll">Collapse All</button>
+<button type="button" class="expandAll">Expand All</button>
+</div>
+<!-- Start of shaded content table and bounding box -->
+<div class="box-round">
+<h2 class="toggle expanded">General Information</h2>
+<div>
+<table border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<colgroup><col style="width:20%"><col></colgroup>
+<tr class="~headderrow">
+	<th colspan="3">Student Indentification</th>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.student_number]</td>
+    <td colspan="2"><input type="text" name="[01]student_number" value="" size="13"></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.name,param:(last, first MI)]</td>
+    <td colspan="2">
+        <input type="text" name="[01]last_name" value="" size="17" maxlength="20" id="lastName">,
+        <input type="text" name="[01]first_name" value="" size="17" maxlength="20" id="firstName">
+        <input type="text" name="[01]middle_name" value="" size="15" maxlength="15" id="middleName"></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.gender]</td>
+    <td colspan="2"><select name="[01]gender">
+        <option value="">
+        <option value="M">~[text:psx.html.admin_students.generaldemographics.male]<option value="F">~[text:psx.html.admin_students.generaldemographics.female]</select></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.ssn]</td>
+    <td colspan="2"><input type="text" name="[01]ssn" value="" size="13"></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.dob]</td>
+    <td colspan="2"><input type="text" name="[01]dob" value="" size="11"></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.age]</td>
+    <td id="studentAge" colspan="2">~(age)</td>
+</tr>
+<tr class="headerrow">
+    <td colspan="3" class="bold">~[text:psx.html.admin_students.generaldemographics.federal_ethnicity_and_race]</td>
+</tr>
+<tr>
+	<td class="subhead">~[text:psx.html.admin_students.generaldemographics.ethnicity]</td>
+	<td colspan="2">
+		<div>
+			<label>~[text:psx.html.admin_students.generaldemographics.is_the_student_hispanic_or_latino]</label>
+			<input id="defaultEthnicity" type="hidden" name="[01]FedEthnicity" value="-1">~[Comment:Note that the onload javascript will revert this back to -1 after it's been changed to whatever is currently in the DB.]
+			<div class="choicefloat"><input type="radio" name="[01]FedEthnicity" value="1">~[text:psx.html.admin_students.generaldemographics.yes]</div>
+			<div class="choicefloat"><input type="radio" name="[01]FedEthnicity" value="0">~[text:psx.html.admin_students.generaldemographics.no]</div>
+			~[if.pref.FRE_AllowDeclineEthnicity=1]<div class="choicefloat"><span class="declined"><input type="radio" name="[01]FedEthnicity" value="2">~[pref:FRE_DeclineEthnicityText]</span></div>[/if]
+			<div class=clearit><!-- --></div>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td class="subhead">~[text:psx.html.admin_students.generaldemographics.race]</td>
+	<td colspan="2">
+		<input type="hidden" name="SaveRace" value="1">
+		<input type="hidden" name="[01]FedRaceDecline" id="r_none_storage" value="0"><!-- See 'decline_race' function in raceselection_block.ftl -->
+~[brij_renderform:federalrace;:GetStudentRaceSelectionBlock]
+	</td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.schedulingreporting_ethnicity]</td>
+    <td colspan="2">
+			<select id="primaryethnicity" name="[01]ethnicity" special="lists.ethnicity">
+	        <option>
+	    </select>
+	</td>
+</tr>
+<tr class="headerrow">
+    <td colspan="3" class="bold">~[text:psx.html.admin_students.generaldemographics.home_address]</td>
+</tr>
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.street_aptsuite]</td>
+    <td colspan="2">
+        <input type="text" name="[01]street" size="45" id="pstreet" value="">
+        <input type="text" name="" value="" size="10" id="papt">
+    </td>
+</tr>
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.city_state_zip]</td>
+    <td colspan="2">
+        <input type="text" name="[01]city" value="" size="30" id="pcity">
+        <input type="text" name="[01]state" value="" size="2" id="pstate">
+        <input type="text" name="[01]zip" value="" size="10" id="pzip">
+
+        <input type="hidden" name="orig_street" value="~([01]street)" id="orig_pstreet">
+        <input type="hidden" name="orig_city" value="~([01]city)" id="orig_pcity">
+        <input type="hidden" name="orig_state" value="~([01]state)" id="orig_pstate">
+        <input type="hidden" name="orig_zip" value="~([01]zip)" id="orig_pzip">
+    </td>
+
+</tr>
+
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.geocode]</td>
+    <td colspan="2">
+        <input type="hidden" name="[01]geocode" value="" id="pgeocode" size="40">
+        <div id="pgeocodehtml"></div>  <div id="boundaryIconDiv"></div> 
+    </td>
+</tr>
+~[if.~[displaypref:mappingadapter.selected]=""]
+[else]
+<tr>
+    <td> </td>
+    <td colspan="2">
+        <input type="button" id="validatePrimaryAddress" value="~[text:psx.html.admin_students.generaldemographics.validate]" onclick="validatePrimaryAddress()">
+    </td>
+</tr>
+[/if]
+
+<tr class="headerrow">
+    <td colspan="3" class="bold">~[text:psx.html.admin_students.generaldemographics.mailing_address_]<a href="javascript:void(copyAddress())" onClick="copyAddress(); displayGeocode('m');">~[text:psx.html.admin_students.generaldemographics.copy_from_home_address]</a></td>
+</tr>
+
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.street_aptsuite1]</td>
+    <td colspan="2">
+        <input type="text" name="[01]mailing_street" value="" size="45" id="mstreet">
+        <input type="text" name="" value="" size="10" id="mapt">
+    </td>
+</tr>
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.city_state_zip1]</td>
+    <td colspan="2">
+        <input type="text" name="[01]mailing_city" value="" size="30" id="mcity">
+        <input type="text" name="[01]mailing_state" value="" size="2" id="mstate">
+        <input type="text" name="[01]mailing_zip" value="" size="10" id="mzip">
+
+        <input type="hidden" name="orig_mailingstreet" value="~([01]mailing_street)" id="orig_mstreet">
+        <input type="hidden" name="orig_mailingcity" value="~([01]mailing_city)" id="orig_mcity">
+        <input type="hidden" name="orig_mailingstate" value="~([01]mailing_state)" id="orig_mstate">
+        <input type="hidden" name="orig_mailingzip" value="~([01]mailing_zip)" id="orig_mzip">
+    </td>
+</tr>
+
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.geocode1]</td>
+    <td colspan="2">
+        <input type="hidden" name="[01]mailing_geocode" value="" id="mgeocode" size="40">
+        <div id="mgeocodehtml"></div>
+    </td>
+</tr>
+~[if.~[displaypref:mappingadapter.selected]=""]
+[else]
+<tr>
+    <td></td>
+    <td colspan="2">
+        <input type="button" id="validateMailingAddress" value="~[text:psx.html.admin_students.generaldemographics.validate1]" onclick="validateMailingAddress()">
+    </td>
+</tr>
+[/if]
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.home_phone]</td>
+    <td colspan="2"><input type="text" name="[01]home_phone" value="" size="17" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]home_phone)');"></td>
+</tr>
+<tr>
+    <td class="bold">Do Not Photograph</td>
+    <td colspan="2"><input type="checkbox" name="[01]wps_nophotos" value=""></td>
+</tr>
+</table>
+</div>
+<h2 class="toggle collapsed">Guardian Information</h2>
+<div>
+<table  border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<tr class="headerrow">
+    <td colspan="3" class="bold">Guardianship Information</td>
+</tr>
+<tr bgcolor="#edf3fe">
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.mothers_name]</td>
+<td><textarea name="[01]mother" rows="2" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.nbsp_nbsp_daytime_phone]</td>
+<td><input type="text" name="[01]motherdayphone" value="" size="24" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]motherdayphone)');"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Home Phone</td>
+<td><input type="text" name="[01]mother_home_phone" value="" size="10"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Cell Phone</td>
+<td><input type="text" name="[01]mother_cell_phone" value="" size="10"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Email</td>
+<td><input type="text" name="[01]mother_email" value="" size="24"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Employer</td>
+<td><input type="text" name="[01]mother_emmployer" value="" size="24"></td>
+</tr>
+<tr bgcolor="#edf3fe">
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.fathers_name]</td>
+<td><textarea name="[01]father" rows="2" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.nbsp_nbsp_daytime_phone1]</td>
+<td><input type="text" name="[01]fatherdayphone" value="" size="24" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]fatherdayphone)');"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Home Phone</td>
+<td><input type="text" name="[01]father_home_phone" value="" size="10"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Cell Phone</td>
+<td><input type="text" name="[01]father_cell_phone" value="" size="10"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Email</td>
+<td><input type="text" name="[01]father_email" value="" size="24"></td>
+</tr>
+<tr>
+<td class="bold">&nbsp; &nbsp; Employer</td>
+<td><input type="text" name="[01]father_emmployer" value="" size="24"></td>
+</tr>
+<tr>
+    <td class="bold">Guardian Name (Last, First, Middle):</td>
+    <td colspan="2"><input type="text" name="[01]guardian_ln" value="" size="21"><input type="text" name="[01]guardian_fn" value="" size="16"><input type="text" name="[01]guardian_mn" value="" size="5"></td>
+</tr>
+<tr>
+<td class="bold">Guardian Employer:</td>
+<td colspan="2"><input type="text" name="[01]guardianemployer" value="" size="24"></td>
+</tr>
+<tr>
+<td class="bold">Guardian Day Phone:</td>
+<td colspan="2"><input type="text" name="[01]guardiandayphone" value="" size="24" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]guardiandayphone)');"></td>
+</tr>
+<tr>
+<td class="bold">Guardian Home Phone:</td>
+<td colspan="2"><input type="text" name="[01]guardianhomephone" value="" size="24" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]guardianhomephone)');"></td>
+</tr>
+<tr>
+<td class="bold">Guardian Cell Phone:</td>
+<td colspan="2"><input type="text" name="[01]guardiancellphone" value="" size="24" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]guardiancellphone)');"></td>
+</tr>
+<tr>
+<td class="bold">Guardian Email</td>
+<td colspan="2"><input type="text" name="[01]guardianemail" value="" size="50" /></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.single_parent_household]</td>
+<td colspan="2"><select name="[01]singleparenthshldflag"><option><option value=True>~[text:psx.html.admin_students.parentsguardian.true]<option value=False>~[text:psx.html.admin_students.parentsguardian.false]</select></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.guardianship]</td>
+    <td><select name="[01]guardianship" value="">
+    <option value="Both">Both</option>
+    <option value="Joint">Joint</option>
+    <option value="Mother">Mother</option>
+    <option value="Father">Father</option>
+    <option value="Guardian">Guardian</option>
+    <option value="Other">Other: Describe in Lives With</option>
+    </select>
+    </td>
+</tr>
+<tr>
+    <td class="bold">Student Lives with:</td>
+    <td colspan="2"><textarea name="[01]Lives_With" cols="40" rows="3" value=""></textarea></td>
+</tr>
+<tr>
+    <td class="bold">Mother on BC:<br>
+    Last, First, MI</td>
+    <td colspan="2"><input type="text" name="[01]VASIS_bc_mother_last" value="" size="20">,
+    &nbsp;<input type="text" name="[01]VASIS_bc_mother_first" value="" size="20">
+    &nbsp;<input type="text" name="[01]VASIS_bc_mother_mi" value="" size="2"></td>
+</tr>
+<tr>
+    <td class="bold">Father on BC:<br>
+    Last, First, MI</td>
+    <td colspan="2"><input type="text" name="[01]VASIS_bc_father_last" value="" size="20">,
+    &nbsp;<input type="text" name="[01]VASIS_bc_father_first" value="" size="20">
+    &nbsp;<input type="text" name="[01]VASIS_bc_father_mi" value="" size="2"></td>
+</tr>
+<tr class="headerrow">
+<td colspan="3" class="bold">~[text:psx.html.admin_students.parentsguardian.guardian_alert]</td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.guardian_alert_text]<img src="/images/alert_guardian.gif" /></td>
+<td colspan="3"><textarea name="[01]Alert_Guardian" rows="4" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.parentsguardian.alert_expires,param:(date)]</td>
+<td colspan="3"><input type="text" class="psDateWidget" name="[01]Alert_GuardianExpires" value="" size="10"> ~[text:psx.html.admin_students.parentsguardian._to_never_expire,param:~[i18shortdate:0/0/0]]</td>
+</tr>
+</table>
+</div>
+<h2 class="toggle collapsed">Emergency/Medical Information</h2>
+<div>
+<table  border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<tr class="headerrow">
+    <td colspan="3" class="bold">Emergency/Medical Information</td>
+</tr>
+<tr>
+<td class="bold" rowspan="2">~[text:psx.html.admin_students.emergency.contact_]</td>
+<td>~[text:psx.html.admin_students.emergency.contact_name_last_first]<br><input type="text" name="[01]Emerg_Contact_1" value="" size="25"></td>
+<td>~[text:psx.html.admin_students.emergency.relationship]<br><select name="[01]Emerg_1_Rel"><option><option value="Aunt">~[text:psx.html.admin_students.emergency.aunt]<option value="Brother">~[text:psx.html.admin_students.emergency.brother]<option value="Father">~[text:psx.html.admin_students.emergency.father]<option value="Friend">~[text:psx.html.admin_students.emergency.friend]<option value="Grandfather">~[text:psx.html.admin_students.emergency.grandfather]<option value="Grandmother">~[text:psx.html.admin_students.emergency.grandmother]<option value="Mother">~[text:psx.html.admin_students.emergency.mother]<option value="Neighbor">~[text:psx.html.admin_students.emergency.neighbor]<option value="Other">~[text:psx.html.admin_students.emergency.other]<option value="Sister">~[text:psx.html.admin_students.emergency.sister]<option value="Uncle">~[text:psx.html.admin_students.emergency.uncle]<option value="Step Father">Step Father<option value="Step Mother">Step Mother</select></td>
+</tr>
+<tr>
+<td>~[text:psx.html.admin_students.emergency.phone]<br><input type="text" name="[01]Emerg_Phone_1" value="" size="15" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]Emerg_Phone_1)');"></td>
+<td>~[text:psx.html.admin_students.emergency.phone_type]<br><select name="[01]Emerg_1_Ptype"><option><option value="Cell">~[text:psx.html.admin_students.emergency.cell]<option value="Home">~[text:psx.html.admin_students.emergency.home]<option value="Work">~[text:psx.html.admin_students.emergency.work]</select></td>
+</tr>
+<tr>
+<td class="bold" rowspan="2">~[text:psx.html.admin_students.emergency.contact_1]</td>
+<td>~[text:psx.html.admin_students.emergency.contact_name_last_first1]<br><input type="text" name="[01]Emerg_Contact_2" value="" size="25"></td>
+<td>~[text:psx.html.admin_students.emergency.relationship1]<br><select name="[01]Emerg_2_Rel"><option><option value="Aunt">~[text:psx.html.admin_students.emergency.aunt1]<option value="Brother">~[text:psx.html.admin_students.emergency.brother1]<option value="Father">~[text:psx.html.admin_students.emergency.father1]<option value="Friend">~[text:psx.html.admin_students.emergency.friend1]<option value="Grandfather">~[text:psx.html.admin_students.emergency.grandfather1]<option value="Grandmother">~[text:psx.html.admin_students.emergency.grandmother1]<option value="Mother">~[text:psx.html.admin_students.emergency.mother1]<option value="Neighbor">~[text:psx.html.admin_students.emergency.neighbor1]<option value="Other">~[text:psx.html.admin_students.emergency.other1]<option value="Sister">~[text:psx.html.admin_students.emergency.sister1]<option value="Uncle">~[text:psx.html.admin_students.emergency.uncle1]<option value="Step Father">Step Father<option value="Step Mother">Step Mother</select></td>
+</tr>
+<tr>
+<td>~[text:psx.html.admin_students.emergency.phone1]<br><input type="text" name="[01]Emerg_Phone_2" value="" size="15" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]Emerg_Phone_2)');"></td>
+<td>~[text:psx.html.admin_students.emergency.phone_type1]<br><select name="[01]Emerg_2_Ptype"><option><option value="Cell">~[text:psx.html.admin_students.emergency.cell1]<option value="Home">~[text:psx.html.admin_students.emergency.home1]<option value="Work">~[text:psx.html.admin_students.emergency.work1]</select></td>
+</tr>
+<tr>
+<td class="bold" rowspan="2">~[text:psx.html.admin_students.emergency.contact_2]</td>
+<td>~[text:psx.html.admin_students.emergency.contact_name_last_first2]<br><input type="text" name="[01]Emerg_Contact_3" value="" size="25"></td>
+<td>~[text:psx.html.admin_students.emergency.relationship2]<br><select name="[01]Emerg_3_Rel"><option><option value="Aunt">~[text:psx.html.admin_students.emergency.aunt2]<option value="Brother">~[text:psx.html.admin_students.emergency.brother2]<option value="Father">~[text:psx.html.admin_students.emergency.father2]<option value="Friend">~[text:psx.html.admin_students.emergency.friend2]<option value="Grandfather">~[text:psx.html.admin_students.emergency.grandfather2]<option value="Grandmother">~[text:psx.html.admin_students.emergency.grandmother2]<option value="Mother">~[text:psx.html.admin_students.emergency.mother2]<option value="Neighbor">~[text:psx.html.admin_students.emergency.neighbor2]<option value="Other">~[text:psx.html.admin_students.emergency.other2]<option value="Sister">~[text:psx.html.admin_students.emergency.sister2]<option value="Uncle">~[text:psx.html.admin_students.emergency.uncle2]<option value="Step Father">Step Father<option value="Step Mother">Step Mother</select></td>
+</tr>
+<tr>
+<td>~[text:psx.html.admin_students.emergency.phone2]<br><input type="text" name="[01]Emerg_3_Phone" value="" size="15" onChange="ValidatePhoneNumber('~(JSFieldParam;[01]Emerg_3_Phone)');"></td>
+<td>~[text:psx.html.admin_students.emergency.phone_type2]<br><select name="[01]Emerg_3_Ptype"><option><option value="Cell">~[text:psx.html.admin_students.emergency.cell2]<option value="Home">~[text:psx.html.admin_students.emergency.home2]<option value="Work">~[text:psx.html.admin_students.emergency.work2]</select></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.doctor]</td>
+<td><input type="text" name="[01]Doctor_Name" value="" size="25"></td>
+<td><input type="text" name="[01]Doctor_Phone" value="" size="15"></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.dentist]</td>
+<td><input type="text" name="[01]Dentist_Name" value="" size="25"></td>
+<td><input type="text" name="[01]Dentist_Phone" value="" size="15"></td>
+</tr>
+<tr>
+<td class="bold">Permission to Contact Doctor/dentist:</td>
+<td colspan="3"><input type="checkbox" name="[01]wps_doctor_permission" value=""></td>
+</tr>
+<tr>
+<td class="bold">Insurance Type</td>
+<td colspan="3">
+<select name="[01]wps_insurance_type">
+<option value="">Select...</option>
+<option value="medicaid">Medicaid</option>
+<option value="famis">FAMIS</option>
+<option value="other">Other</option>
+<option value="none">None</option>
+</select>
+</td>
+</tr>
+<tr>
+<td class="bold">Insurance Company</td>
+<td colspan="3"><input type="text" name="[01]wps_insurance_company" value=""></td>
+</tr>
+<tr>
+<td class="bold">Policy Num:</td>
+<td colspan="3"><input type="text" name="[01]wps_insurance_policy_num" value=""></td>
+</tr>
+<tr>
+<td class="bold">Name of Insured:</td>
+<td colspan="3"><input type="text" name="[01]wps_insurance_insured_name"></td>
+</tr>
+<tr>
+<td class="bold">Insured SSN:</td>
+<td colspan="3"><input type="text" name="[01]wps_insured_ssn" value=""></td>
+</tr>
+<tr>
+<td class="bold">Permission to receive blood products:</td>
+<td colspan="3"><input type="checkbox" name="[01]wps_blood_permission" value=""></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.special_medical]<br>~[text:psx.html.admin_students.emergency.considerations]</td>
+<td colspan="3"><textarea name="[01]Medical_Considerations" rows="4" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">Allergy 1:</td>
+<td colspan="3">
+Allergy: <input type="text" name="[01]wps_allergy1" value=""><br>
+Reaction: <input type="text" name="[01]wps_allergy1_reaction" value=""><br>
+EpiPen Required? <input type="checkbox" name="[01]wps_allergy1_epipen">
+</td>
+</tr>
+<tr>
+<td class="bold">Allergy 2:</td>
+<td colspan="3">
+Allergy: <input type="text" name="[01]wps_allergy2" value=""><br>
+Reaction: <input type="text" name="[01]wps_allergy2_reaction" value=""><br>
+EpiPen Required? <input type="checkbox" name="[01]wps_allergy2_epipen" value=""><br>
+</td>
+</tr>
+<tr>
+<td class="bold">Allergy 3:</td>
+<td colspan="3">
+Allergy: <input type="text" name="[01]wps_allergy3" value=""><br>
+Reaction: <input type="text" name="[01]wps_allergy3_reaction" value=""><br>
+EpiPen Required? <input type="checkbox" name="[01]wps_allergy3_epipen">
+</td>
+</tr>
+<tr>
+<td class="bold">Other Allergies:</td>
+<td colspan="3"><input type="text" name="[01]allergies" value="" size="25"></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.immunizations]</td>
+<td colspan="3">
+<table border="0" cellpadding="4" cellspacing="0">
+<tr align="center">
+<td>~[text:psx.html.admin_students.emergency.polio]</td>
+<td>~[text:psx.html.admin_students.emergency.mmr]</td>
+<td>~[text:psx.html.admin_students.emergency.dpt]</td>
+</tr>
+<tr align="center">
+<td><input type="text" name="[01]immunizaton_polio" value="" size="3"></td>
+<td><input type="text" name="[01]immunizaton_mmr" value="" size="3"></td>
+<td><input type="text" name="[01]immunizaton_dpt" value="" size="3"></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.medical_alert_text]<img src="/images/alert_medical.gif" /></td>
+<td colspan="3"><textarea name="[01]Alert_Medical" rows="4" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.emergency.alert_expires,param:(date)]</td>
+<td colspan="3"><input type="text" name="[01]Alert_MedicalExpires" value="" size="10"> ~[text:psx.html.admin_students.emergency._to_never_expire,param:~[i18shortdate:0/0/0]]
+</td>
+</tr>
+</table>
+</div>
+<h2 class="toggle collapsed">Discipline and other Alert</h2>
+<div>
+<table  border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<tr class="headerrow">
+<td colspan="3" class="bold">~[text:psx.html.admin_students.misc.other_alert]</td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.misc.other_alert_text]<img src="/images/alert_other.gif" /></td>
+<td colspan="2"><textarea name="[01]Alert_Other" rows="4" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.misc.alert_expires,param:(Date)]</td>
+<td colspan="2"><input type="text" name="[01]Alert_OtherExpires" value="" size="10"> ~[text:psx.html.admin_students.misc._to_never_expire,param:~[i18shortdate:0/0/0]]</td>
+</tr>
+<tr class="headerrow">
+    <td class="bold" colspan="3">Discipline Alert</td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.disciplinealert.discipline_alert_text]<img src="/images/alert_discipline.gif" /></td>
+<td colspan="2"><textarea name="[01]Alert_Discipline" rows="8" cols="40"></textarea></td>
+</tr>
+<tr>
+<td class="bold">~[text:psx.html.admin_students.disciplinealert.alert_expires,param:(date)]</td>
+<td colspan="2"><input type="text" name="[01]Alert_DisciplineExpires" value="" size="10"> ~[text:psx.html.admin_students.disciplinealert._to_never_expire,param:~[i18shortdate:0/0/0]]</td>
+</tr>
+</table>
+</div>
+<h2 class="toggle collapsed">Virginia State Information</h2>
+<div>
+<table  border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<tr class="headerrow">
+    <td class="bold" colspan="3">Virginia State Information</td>
+</tr>
+<tr>
+    <td class="bold" title="[Students]State_ExcludeFromReporting">Exclude this student from State Reporting</td>
+    <td colspan="2"><select name="[students]State_ExcludeFromReporting">
+    <option value="FALSE">No</option>
+    <option value="TRUE">Yes</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]State_StudentNumber">State Testing Identifier (EIMS State Student Number)</td>
+        <td colspan="2"><input type="text" name="[students]State_StudentNumber" value="" maxlength="10" size="10"></td>
+    </tr>
+    <tr><td title="[Students]VA_ResponsibleDistrict"><span class="bold">Responsible Division</span>
+    	<br>Enrollment-Transfer Info Current Enrollment page</td>
+        <td colspan="2">~([students]VA_ResponsibleDistrict)
+    </tr>
+<tr><td title="[Students]VA_ResponsibleSchool"><span class="bold">Responsible School</span>
+    	<br>Enrollment-Transfer Info Current Enrollment page</td>
+        <td colspan="2">~([students]VA_ResponsibleSchool)
+    </tr>
+    <tr><td title="[Students]VA_ServingDistrict"><span class="bold">Serving Division</span>
+    	<br>Enrollment-Transfer Info Current Enrollment page</td>
+        <td colspan="2">~([students]VA_ServingDistrict)
+    </tr>
+    <tr><td title="[Students]VA_ServingSchool" ><span class="bold">Serving School</span>
+    	<br>Enrollment-Transfer Info Current Enrollment page</td>
+
+        <td colspan="2">~([students]VA_ServingSchool) <input type="hidden" id="VA_ServingSchool" value="~([students]VA_ServingSchool)"/>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_BirthCountry">Birth Country Code</td>
+        <td colspan="2"><input type="text" name="[students]VA_BirthCountry" value="" maxlength="4" size="4">
+        (<a href="usa_va/VA_Country.html" target="_blank">Codes</a>)</td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_HomeLang">Home Language Code</td>
+        <td colspan="2"><input type="text" name="[students]VA_HomeLang" value="" maxlength="4" size="4">
+        (<a href="usa_va/VA_Lang.html" target="_blank">Codes</a>)</td>
+    </tr>
+    <tr>
+        <td class="bold" title="[Students]VA_Immigrant">Immigrant</td>
+        <td colspan="2"><select name="[students]VA_Immigrant">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Gifted_Code">Gifted Code</td>
+        <td colspan="2"><select name="[students]VA_Gifted_Code">
+            <option value=""></option>
+            <option value="1">Gen. Intellectual Aptitude only (1)</option>
+            <option value="2">Spec. Academic Aptitude only (2)</option>
+            <option value="3">Visual/Performing Arts only (3)</option>
+            <option value="4">Tech/Prac Arts only (4)</option>
+            <option value="12">Gen. Intellectual Aptitude & Spec. Academic Aptitude (12)</option>
+            <option value="13">Gen. Intellectual Aptitude & Visual/Performing Arts (13)</option>
+            <option value="14">Gen. Intellectual Aptitude & Tech/Prac Arts (14)</option>
+            <option value="23">Spec. Academic Aptitude & Visual/Performing Arts (23)</option>
+            <option value="24">Spec. Academic Aptitude & Tech/Prac Arts (24)</option>
+            <option value="34">Visual/Performing Arts & Tech/Prac Arts (34)</option>
+            <option value="123">Gen. Intellectual, Spec. Academic Aptitude, & Visual/Performing Arts (123)</option>
+            <option value="124">Gen. Intellectual, Spec. Academic Aptitude, & Tech/Prac Arts (124)</option>
+            <option value="234">Spec. Academic Aptitude, Visual/Performing Arts, & Tech/Prac Arts (234)</option>
+            <option value="1234">Gen. Intellectual, Spec. Academic, Visual/Performing & Tech/Prac Arts (1234)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_GiftedReferralFlag">Gifted Referral </td>
+        <td colspan="2"><select name="[students]VA_GiftedReferralFlag">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Title1_Code">Title 1 Code</td>
+        <td colspan="2"><select name="[students]VA_Title1_Code">
+            <option value=""></option>
+            <option value="01">Reading (01)</option>
+            <option value="02">Math (02)</option>
+            <option value="03">Reading and Math (03)</option>
+            <option value="04">Math and Health (04)</option>
+            <option value="05">Reading and Health (05)</option>
+            <option value="06">Math, Reading and Health (06)</option>
+            <option value="07">Math and Support Services (07)</option>
+            <option value="08">Reading and Support Services (08)</option>
+            <option value="09">Math, Reading and Support Services (09)</option>
+            <option value="10">Math, Reading, Support Services and Health (10)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_GED_Code">GED Program Code</td>
+        <td colspan="2"><select name="[students]VA_GED_Code">
+            <option value=""></option>
+            <option value="1">GED (1)</option>
+            <option value="2">ISAEP (2)</option>
+            <option value="3">GAD (3)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Bacc">International Baccalaureate Program</td>
+        <td colspan="2"><select name="[students]VA_Bacc">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Grd_Comp_Code">Graduate/Other Completer Code</td>
+        <td colspan="2"><select name="[students]VA_Grd_Comp_Code">
+            <option value=""></option>
+            <option value="1">Standard Diploma (1)</option>
+            <option value="2">Advanced Studies Diploma (2)</option>
+            <option value="3">Special Diploma (3)</option>
+            <option value="4">Certificate of Program Completion (4)</option>
+            <option value="5">General Educational Development (GED) (5)</option>
+            <option value="6">International Baccalaureate (IB) Diploma (6)</option>
+            <option value="7">Modified Standard Diploma (7)</option>
+            <option value="8">GED Certificate as a part of an ISAEP (8)</option>
+            <option value="9">General Achievement Diploma (9)</option>
+            <option value="10">No award in this school year - IEP allows multiple years in grade 12(10)</option>
+            <option value="11">No award in this school year - foreign exchange student (11)</option>
+            <option value="12">No award in this school year - student whose age and LEP status allows for multiple years in grade 12(12)</option>
+            <option value="13">No award in this school year - previously earned a Graduate/Other Completer Code 1-9 in a prior school year(13)</option>
+            <option value="14">Standard Technical Diploma  - Diploma awarded to a student who has earned the units of credit prescribed by the BoE(14)</option>
+            <option value="15">Advanced Technical Diploma  - Diploma awarded to a student who has earned the units of credit prescribed by the BoE(15)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Grd_Plan_Code">Graduation Plan Code</td>
+        <td colspan="2"><select name="[students]VA_Grd_Plan_Code">
+            <option value=""></option>
+            <option value="1">4-yr college (1)</option>
+            <option value="2">2-yr college (2)</option>
+            <option value="3">Other education plans (3)</option>
+            <option value="4">Military (4)</option>
+            <option value="5">Employment (5)</option>
+            <option value="6">None (6)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Adv_Place_Code">Advanced Placement Code</td>
+        <td colspan="2"><select name="[students]VA_Adv_Place_Code">
+            <option value=""></option>
+            <option value="1">Enrolled in AP class (1)</option>
+            <option value="2">Enrolled in AP and took AP exam (2)</option>
+            <option value="3">Took AP exam (3)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Dual">Dual Enrollment</td>
+        <td colspan="2"><select name="[students]VA_Dual">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+<tr class="headerRow"><td colspan="3" class="bold">CTE Finisher Code<br>
+        (Note: Check ONE only. If all are No and student's grade level is between 7-12, 4 will output in report):</td></tr>
+    <tr class="~[evenoddrow;reset]"><td class="bold" title="[Students]VA_CTE">CTE Completer</td>
+        <td colspan="2"><select name="[students]VA_CTE">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select>  Finished CTE requirements for completion (1 will output in report)</td>
+    </tr>
+    <tr class="~[evenoddrow;maintain]"><td class="bold" title="[Students]VA_CTE_Tech">CTE Tech Prep Completer</td>
+        <td colspan="2"><select name="[students]VA_CTE_Tech">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select> Finished CTE requirements for completion of a Tech Prep program (2 will output in report)</td>
+    </tr>
+    <tr class="~[evenoddrow;maintain]"><td class="bold" title="[Students]VA_CTE_Course">Current CTE Course</td>
+        <td colspan="2"><select name="[students]VA_CTE_Course">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select> Took at least one state-approved CTE course since 7th grade but has not finished<br>
+            CTE requirements for completion (3 will output in report)</td>
+    </tr>
+    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr><td class="bold" title="[Students]VA_CTE_Career_Family_Code">CTE Career Cluster Code</td>
+        <td colspan="2"><select name="[students]VA_CTE_Career_Family_Code">
+            <option value=""></option>
+            <option value="CT1">Agriculture and Natural Resources (CT1)</option>
+            <option value="TP1">Agriculture and Natural Resources (TP1)</option>
+            <option value="CT2">Architecture and Construction (CT2)</option>
+            <option value="TP2">Architecture and Construction(TP2)</option>
+            <option value="CT3">Arts/Audio/Video Technology & Communications (CT3)</option>
+            <option value="TP3">Arts/Audio/Video Technology & Communications (TP3)</option>
+            <option value="CT4">Business and Administration (CT4)</option>
+            <option value="TP4">Business and Administration (TP4)</option>
+            <option value="CT5">Education and Training (CT5)</option>
+            <option value="TP5">Education and Training (TP5)</option>
+            <option value="CT6">Finance (CT6)</option>
+            <option value="TP6">Finance (TP6)</option>
+            <option value="CT7">Government and Public Administration (CT7)</option>
+            <option value="TP7">Government and Public Administration (TP7)</option>
+            <option value="CT8">Health Science (CT8)</option>
+            <option value="TP8">Health Science (TP8)</option>
+            <option value="CT9">Hospitality and Tourism (CT9)</option>
+            <option value="TP9">Hospitality and Tourism (TP9)</option>
+            <option value="CT10">Human Services (CT10)</option>
+            <option value="TP10">Human Services (TP10)</option>
+            <option value="CT11">Information Technology (CT11)</option>
+            <option value="TP11">Information Technology (TP11)</option>
+            <option value="CT12">Law and Public Safety (CT12)</option>
+            <option value="TP12">Law and Public Safety (TP12)</option>
+            <option value="CT13">Manufacturing (CT13)</option>
+            <option value="TP13">Manufacturing(TP13)</option>
+            <option value="CT14">Marketing (CT14)</option>
+            <option value="TP14">Marketing (TP14)</option>
+            <option value="CT15">Scientific Research & Engineering (CT15)</option>
+            <option value="TP15">Scientific Research & Engineering (TP15)</option>
+            <option value="CT16">Transportation, Distribution & Logistics (CT16)</option>
+            <option value="TP16">Transportation, Distribution & Logistics (TP16)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_CTE_Special_Pop_Code">CTE Special Populations Code</td>
+        <td colspan="2"><select name="[students]VA_CTE_Special_Pop_Code">
+            <option value=""></option>
+            <option value="4">Non-traditional Career Preparation (4)</option>
+            <option value="5">Single Parent (5)</option>
+            <option value="6">Displaced Homemaker (6)</option>
+            <option value="45">Non-Tradional and Single Parent (45)</option>
+            <option value="46">Non-Tradional and Displaced Homemaker (46)</option>
+            <option value="56">Single Parent and Displaced Homemaker (56)</option>
+            <option value="456">Non-Tradional, Single Parent and Displaced Homemaker (456)</option>
+            </select></td>
+    </tr>
+    <tr><td title="[Students]VA_Dropout_Reason"><span class="bold">W8 Reason Code</span>
+    	<br>(Dropout Reason)</td>
+        <td colspan="2"><select name="[students]VA_Dropout_Reason">
+            <option value=""></option>
+            <option value="10">Achievement (10)</option>
+            <option value="20">Behavioral (20)</option>
+            <option value="30">Health (30)</option>
+            <option value="40">Family reasons (40)</option>
+            <option value="41">Parental Privilege: Age/maturity (41)</option>
+            <option value="42">Non-applicable (PK Students only) (42)</option>
+            <option value="50">Financial hardship (50)</option>
+            <option value="60">Employment (60)</option>
+            <option value="70">Moved (70)</option>
+            <option value="80">Maximum age (80)</option>
+            <option value="81">Personal choice (81)</option>
+            <option value="82">Post Graduate (82)</option>
+            <option value="90">Expulsion (90)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Retention">Retained</td>
+        <td colspan="2"><select name="[students]VA_Retention">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_Truancy_Conf">Truancy Conference</td>
+        <td colspan="2"><select name="[students]VA_Truancy_Conf">
+            <option value="">No</option>
+            <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_TuitionPaid">Tuition Paid Code</td>
+        <td colspan="2"><select name="[students]VA_TuitionPaid">
+            <option value=""></option>
+            <option value="02">Paid Tuition to State Supported Institution (02)</option>
+            <option value="03">Paid Tuition to Private Institution (03)</option>
+            <option value="04">Paid Tuition to Regional Center (04)</option>
+            <option value="05">Received Tuition from Another LEA (05)</option>
+            <option value="07">Served Through CSA (07)</option>
+            <option value="09">Inter-State Compact Placement (09)</option>
+            <option value="10">Tuition Received from Contiguous Out-of-State Stu. w/reciprocal att. priv. (10)</option>
+            <option value="11">Tuition Received from Contiguous Out-of-State Stu. w-o/reciprocal att. priv. (11)</option>
+            <option value="12">Tuition Received from a Non-Contiguous State or US Territory (12)</option>
+            <option value="15">Tuition paid to a school outside of Virginia (15)</option>
+            <option value="16">Tuition waived; student served through Public School Choice agreement (16)</option>
+            <option value="17">Tuition waived; applicable only to Fairfax/Falls Church DJJ/Community SVCS BD (17)</option>
+            <option value="18">Tuition waived for full time virutal program (18)</option>
+            </select></td>
+    </tr>
+<tr><td class="bold" title="[Students]VA_KindergartenReadiness">Kindergarten Readiness Assessment Flag</td>
+        <td colspan="2"><select name="[students]VA_KindergartenReadiness">
+                <option value="">No</option>
+                <option value="1">Yes</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_SchoolChoiceStatusCD">School Choice Status Code</td>
+        <td colspan="2"><select name="[students]VA_SchoolChoiceStatusCD">
+            <option value=""></option>
+            <option value="1">Applied to transfer, BUT request not granted for School Choice (1)</option>
+            <option value="2">Applied to transfer, AND request was granted BUT did not transfer (2)</option>
+            <option value="3">Applied to transfer, AND transferred from Responsible to Serving School (3)</option>
+            </select></td>
+    </tr>
+    <tr><td class="bold" title="[Students]VA_SupplEdServStatusCD">Supplemental Education Services Status Code</td>
+    <td colspan="2"><select name="[students]VA_SupplEdServStatusCD">
+    <option value=""></option>
+    <option value="1">Student did not apply to receive services (1)</option>
+    <option value="2">Student received Supplemental Education Services currently (2)</option>
+    <option value="3">Student applied, BUT did not receive services (3)</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_Diploma_Seal">Diploma Seal</td>
+        <td colspan="2"><input type="text" name="[students]VA_Diploma_Seal" value="" maxlength="5" size="5">
+        (<a href="usa_va/VA_DiplomaSeal_Codes.html" target="_blank">Codes</a>)</td>
+</tr>
+<tr><td class="bold" title="[Students]VA_EarlyCollegeScholarProgCD">Early College Scholar Program Code</td>
+    <td colspan="2"><select name="[students]VA_EarlyCollegeScholarProgCD">
+    <option value=""></option>
+    <option value="1">Student completed Early College Scholar Progam agreement (1)</option>
+    <option value="2">Student earned Governor's Early College Scholar certificate (2)</option>
+    <option value="3">Commonwealth Scholar Program (3)</option>
+    <option value="4">Early College and Commonwealth Scholar Certificate (4)</option>
+    <option value="5">Participating in Early College Scholar &amp; Commonwealth Scholar Programs (5)</option>
+    </select>
+    </td>
+</tr>
+<tr><td class="bold" title="[Students]VA_DistanceLearning">Distance Learning Flag</td>
+    <td colspan="2"><select name="[students]VA_DistanceLearning">
+    <option value="">No</option>
+    <option value="1">Yes</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_PK_experience_code">PK Experience Code</td>
+    <td colspan="2"><select name="[students]VA_PK_experience_code">
+    <option value=""></option>
+    <option value="20">Coordinated Pre-kindergarten Classroom (20)</option>
+    <option value="21">Virginia Preschool Initiative (VPI) (21)</option>
+    <option value="22">Title I Pre-kindergarten (22)</option>
+    <option value="23">Head Start  (23)</option>
+    <option value="30">Coordinated Special Education (30)</option>
+    <option value="31">Special Education Only (31)</option>
+    <option value="40">Government - Tuition Charged (40)</option>
+    <option value="50">Private Provider (50)</option>
+    <option value="51">Licensed Family Home Daycare Provider (51)</option>
+    <option value="60">No Formal or Institutional PK Program (60)</option>
+    <option value="61">Other (61)</option>
+    <option value="99">Not Provided (99)</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_PK_weekly_time">PK Weekly Time Code</td>
+    <td colspan="2"><select name="[students]VA_PK_weekly_time">
+    <option value=""></option>
+    <option value="0">No time in a formal or institutional PK program (0)</option>
+    <option value="1">Less than 15 hours per week (1)</option>
+    <option value="15">15 hours or more but less than 30 hours per week (15)</option>
+    <option value="30">30 or more hours per week (30)</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_CTE_Dual">CTE Dual Enrollment</td>
+    <td colspan="2"><select name="[students]VA_CTE_Dual">
+    <option value="">No</option>
+    <option value="1">Yes</option>
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_CTE_Competency">CTE Competency Attainment</td>
+    <td colspan="2"><select name="[students]VA_CTE_Competency">
+    <option value="">No</option>
+    <option value="1">Yes</option>
+    </select></td></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_CTE_Completer">CTE Completer Program Code</td>
+    <td colspan="2"><input type="text" name="[students]VA_CTE_Completer" value="" size="4" maxlength="4">
+    (<a href="usa_va/VA_CTE_Completer_Codes.html" target="_blank">Codes</a>)</td>
+</tr>
+<tr><td class="bold" title="[Students]VA_CoOp">Co-Op Student</td>
+    <td colspan="2"><select name="[students]VA_CoOp">
+        <option value="">No</option>
+        <option value="1">Yes</option>
+        </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_tech_prep">Tech Prep</td>
+    <td colspan="2"><select name="[students]VA_tech_prep">
+        <option value="">No</option>
+        <option value="1">Yes</option>
+        </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_PrimNight_ResCode">Inital Primary Nighttime Residence Code</td>
+    <td colspan="2"><select name="[students]VA_PrimNight_ResCode" id="VA_PrimNight_ResCode">
+        <option value=""></option>
+        <option value="1">Unsheltered (1)</option>
+        <option value="2">Shelters (2)</option>
+        <option value="3">Doubled-Up (3)</option>
+        <option value="4">Hotel/Motel (4)</option>
+        </select></td>
+</tr>
+<input type="hidden" name="[students]va_homeless" value="" id="VA_homeless"></input>
+<tr><td class="bold" title="[Students]VA_NegDelinquent_Code">Neglected/Delinquent Code</td>
+    <td colspan="2"><select name="[students]VA_NegDelinquent_Code">
+        <option value=""></option>
+        <option value="1">Neglected Programs (1)</option>
+        <option value="2">Juvenile Detention (2)</option>
+        <option value="3">Juvenile Correction (3)</option>
+        <option value="4">Adult Correction (4)</option>
+        <option value="5">At Risk (5)</option>
+        <option value="6">Other (6)</option>
+        </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_FTVirtual_ProgCode">Full Time Virtual Program Code</td>
+    <td colspan="2"><select name="[students]VA_FTVirtual_ProgCode">
+        <option value=""></option>
+        <option value="1">Participates from home, not homebound, not homebased (1)</option>
+        <option value="2">Participates from home while on homebound education (2)</option>
+        <option value="3">Participates from home during a homebased expulsion or long-term suspension (3)</option>
+        <option value="4">Participates from home during a homebased short-term suspension (4)</option>
+        <option value="5">Participates from a public school facility (5)</option>
+        <option value="6">Participates from a private school facility (6)</option>
+        <option value="7">Participates from another location (7)</option>
+        </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_LEP_Serv_Cd">Receiving ESL Services Code</td>
+    <td colspan="2"><select name="[students]VA_LEP_Serv_Cd">
+				<option value=""></option>
+				<option value="1">Identified as LEP and receives ESL Services (1)</option>
+				<option value="2">Identified as LEP but does not receive or has refused ESL Services (2)</option>
+				<option value="3">Identified as formerly LEP for each of the two years after exiting ESL services (3)</option>
+        </select></td>
+</tr>
+<tr>
+    <td class="bold">Translation Service Requested</td>
+    <td colspan="2"><input type="checkbox" name="[01]wps_translationRequested" value=""></td>
+</tr>
+<tr>
+    <td class="bold">Requested Language:</td>
+    <td colspan="2"><select name="[01]wps_requestedOralLanguage">
+        <option value="">Not Requested
+        <option value="AmericanSignLanguage">American Sign Language
+        <option value="Arabic">Arabic
+        <option value="Chinese-Mandarin">Chinese-Mandarin
+        <option value="Spanish">Spanish
+        <option value="Urdu">Urdu
+        <option value="Vietnamese">Vietnamese
+    </select></td>
+</tr>
+<tr>
+    <td class="bold">Requested Language:</td>
+    <td colspan="2"><select name="[01]wps_requestedWrittenLanguage">
+        <option value="">Not Requested
+        <option value="AmericanSignLanguage">American Sign Language
+        <option value="Arabic">Arabic
+        <option value="Chinese-Mandarin">Chinese-Mandarin
+        <option value="Spanish">Spanish
+        <option value="Urdu">Urdu
+        <option value="Vietnamese">Vietnamese
+    </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VASIS_LEP_Serv_Cd">Historical ESL Services Code</td>
+    <td colspan="2"><select name="[students]VASIS_LEP_Serv_Cd">
+				<option value=""></option>
+				<option value="1">Identified as LEP and receives ESL Services (1)</option>
+				<option value="2">Identified as LEP but does not receive or has refused ESL Services (2)</option>
+				<option value="3">Identified as formerly LEP for each of the two years after exiting ESL services (3)</option>
+        </select><br>This field is not reported. Use to track if student <strong>WAS</strong> in ESL. Enter last reportable code.</td>
+</tr>
+<tr>
+	<td class="bold">Date IDed as LEP<br>(MM/YYYY)</td>
+	<td><input type="text" id="lepstart" name="[01]wps_lep_id_date" value=""></input></td>
+</tr>
+<tr>
+	<td class="bold">Date Exited Direct LEP Services<br>(MM/YYYY)</td>
+	<td><input type="text" id="lepdirectend" name="[01]wps_lep_exit_direct_services_date" value=""></input></td>
+</tr>
+<tr>
+	<td class="bold">Date of LEP status END<br>(MM/YYYY)</td>
+	<td><input type="text" name="[01]wps_lep_end_date" value=""></input></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_IB_Cd">IB Code</td>
+    <td colspan="2"><select name="[students]VA_IB_Cd">
+        <option value=""></option>
+        <option value="1">Enrolled in IB class (1)</option>
+        <option value="2">Enrolled in IB class and took IB exam (2)</option>
+        <option value="3">Took IB exam (3)</option>
+        </select></td>
+</tr>
+<tr><td class="bold" title="[Students]VA_Unacc_Hless_Youth_Flag">Unaccompanied Homeless Youth Flag</td>
+    <td colspan="2"><select name="[students]VA_Unacc_Hless_Youth_Flag">
+        <option value="">No</option>
+        <option value="1">Yes</option>
+        </select></td>
+</tr>
+<tr>
+	<td class="bold" title="[Students]VA_MilCompStaFlag">Military Compact Flag (Underage student can attend Kindergarten in VA)</td>
+	<td colspan="2"><input type="checkbox" name="[Students]VA_MilCompStaFlag" value=""></td>
+</tr>
+
+</table>
+</div>
+<br>
+
+<div class="button-row"><input type="hidden" name="ac" value="prim">~[submitbutton]</div>
+</div>
+<br>
+<!-- end of content of bounding box -->
+
+~[wc:admin_footer_frame_css]
+</form>
+<!--</script>-->
+~[if.~[displaypref:mappingadapter.selected]=""]
+[else]
+<script type="text/javascript">
+    addYuiButton("validatePrimaryAddress", validatePrimaryAddress);
+    addYuiButton("validateMailingAddress", validateMailingAddress);
+$j('#VA_PrimNight_ResCode').change(function() {
+		
+		var code = $j('#VA_PrimNight_ResCode option:selected').val();
+		
+		if (code) {
+			$j('#VA_homeless').prop('value', 1);
+		} else {
+			$j('#VA_homeless').prop('value', '');
+		}
+	});
+</script>
+[/if]
+</body>
+</html><!-- end right frame -->
